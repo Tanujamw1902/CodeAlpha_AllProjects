@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banking System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button class="home-btn" onclick="goHome()">← Back to Home</button>
+    <h1>Banking System Demo</h1>
+
+    <div class="section">
+        <h3>Create Account</h3>
+        <label>Customer Name: <input type="text" id="name"/></label>
+        <label>Initial Balance: <input type="number" id="balance" value="0"/></label>
+        <button id="create">Create Account</button>
+    </div>
+
+    <div class="section">
+        <h3>Transactions</h3>
+        <label>Deposit Amount: <input type="number" id="deposit"/></label>
+        <button id="do-deposit">Deposit</button>
+
+        <label>Withdraw Amount: <input type="number" id="withdraw"/></label>
+        <button id="do-withdraw">Withdraw</button>
+    </div>
+
+    <div class="section">
+        <button id="show-info">Show Account Info</button>
+        <div id="output"></div>
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>

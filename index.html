@@ -1,65 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CodeAlpha Project Launcher</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-    }
-    .header {
-      background: #333;
-      padding: 15px;
-      color: white;
-      text-align: center;
-      font-size: 26px;
-      font-weight: bold;
-    }
-    .tabs {
-      display: flex;
-      background: #444;
-    }
-    .tab {
-      padding: 15px 20px;
-      color: white;
-      cursor: pointer;
-      flex: 1;
-      text-align: center;
-      font-size: 18px;
-      border-right: 1px solid #555;
-    }
-    .tab:hover {
-      background: #555;
-    }
-    iframe {
-      width: 100%;
-      height: 90vh;
-      border: none;
-    }
-  </style>
-
-  <script>
-    function openProject(projectName) {
-      document.getElementById("projectFrame").src =
-        projectName + "/frontend/index.html";
-    }
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeAlpha Projects Launcher</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <div class="header">CodeAlpha — All Projects Launcher</div>
+    <h1>🚀 CodeAlpha Projects</h1>
+    <p>Click on any project to open its demo.</p>
 
-  <div class="tabs">
-    <div class="tab" onclick="openProject('cgpa')">CGPA Calculator</div>
-    <div class="tab" onclick="openProject('login')">Login System</div>
-    <div class="tab" onclick="openProject('sudoku')">Sudoku Solver</div>
-    <div class="tab" onclick="openProject('banking')">Banking System</div>
-  </div>
+    <div class="projects">
+        <div class="project" onclick="openProject('cgpa')">CGPA Calculator</div>
+        <div class="project" onclick="openProject('login')">Login & Registration</div>
+        <div class="project" onclick="openProject('sudoku')">Sudoku Solver</div>
+        <div class="project" onclick="openProject('banking')">Banking System</div>
+    </div>
 
-  <iframe id="projectFrame"></iframe>
+<script>
+function openProject(name){
+    window.location.href = name + '/frontend/index.html';
+}
+</script>
 </body>
 </html>
