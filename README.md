@@ -1,4 +1,4 @@
-# 🚀 ull Stack CPP + Frontend Projects  
+# 🚀 Full Stack CPP + Frontend Projects  
 This repository contains **4 Complete Projects**. 
 Each project includes:
 
