@@ -3,24 +3,283 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CodeAlpha Projects Launcher</title>
-<link rel="stylesheet" href="style.css">
+<title>CodeAlpha Projects Portfolio</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+    background-size: 50px 50px;
+    animation: float 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-100px); }
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    z-index: 1;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: fadeInDown 0.8s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    font-size: 3.5rem;
+    color: white;
+    margin-bottom: 15px;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.logo {
+    font-size: 4rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.subtitle {
+    font-size: 1.3rem;
+    color: rgba(255,255,255,0.9);
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    animation: fadeInUp 1s ease 0.3s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.project-card {
+    background: white;
+    border-radius: 20px;
+    padding: 35px 25px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.project-card:hover::before {
+    transform: scaleX(1);
+}
+
+.project-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.project-icon {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.project-card:hover .project-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.project-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.project-desc {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.tag {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+footer {
+    margin-top: 60px;
+    text-align: center;
+    color: white;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+    .subtitle {
+        font-size: 1.1rem;
+    }
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 </head>
 <body>
-    <h1>🚀 CodeAlpha Projects</h1>
-    <p>Click on any project to open its demo.</p>
+    <div class="container">
+        <header>
+            <h1><span class="logo">🚀</span> CodeAlpha Projects</h1>
+            <p class="subtitle">Explore My Web Development Portfolio</p>
+        </header>
 
-    <div class="projects">
-        <div class="project" onclick="openProject('cgpa')">CGPA Calculator</div>
-        <div class="project" onclick="openProject('login')">Login & Registration</div>
-        <div class="project" onclick="openProject('sudoku')">Sudoku Solver</div>
-        <div class="project" onclick="openProject('banking')">Banking System</div>
+        <div class="projects-grid">
+            <div class="project-card" onclick="openProject('cgpa')">
+                <span class="project-icon">📊</span>
+                <h2 class="project-title">CGPA Calculator</h2>
+                <p class="project-desc">Calculate your semester GPA and CGPA with an intuitive grade input system</p>
+                <div class="project-tags">
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">HTML/CSS</span>
+                    <span class="tag">Calculator</span>
+                </div>
+            </div>
+
+            <div class="project-card" onclick="openProject('login')">
+                <span class="project-icon">🔐</span>
+                <h2 class="project-title">Login & Registration</h2>
+                <p class="project-desc">Secure user authentication system with modern UI/UX design</p>
+                <div class="project-tags">
+                    <span class="tag">Authentication</span>
+                    <span class="tag">Forms</span>
+                    <span class="tag">Security</span>
+                </div>
+            </div>
+
+            <div class="project-card" onclick="openProject('sudoku')">
+                <span class="project-icon">🧩</span>
+                <h2 class="project-title">Sudoku Solver</h2>
+                <p class="project-desc">AI-powered Sudoku puzzle solver using backtracking algorithm</p>
+                <div class="project-tags">
+                    <span class="tag">Algorithm</span>
+                    <span class="tag">Puzzle</span>
+                    <span class="tag">AI Logic</span>
+                </div>
+            </div>
+
+            <div class="project-card" onclick="openProject('banking')">
+                <span class="project-icon">🏦</span>
+                <h2 class="project-title">Banking System</h2>
+                <p class="project-desc">Complete banking management with deposits, withdrawals, and transaction history</p>
+                <div class="project-tags">
+                    <span class="tag">Finance</span>
+                    <span class="tag">CRUD</span>
+                    <span class="tag">Management</span>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Built with ❤️ by CodeAlpha Intern | &copy; 2024 All Rights Reserved</p>
+        </footer>
     </div>
 
-<script>
-function openProject(name){
-    window.location.href = name + '/frontend/index.html';
-}
-</script>
+    <script>
+        function openProject(name) {
+            window.location.href = name + '/frontend/index.html';
+        }
+
+        // Add animation on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>

@@ -3,29 +3,436 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login & Registration</title>
-<link rel="stylesheet" href="style.css">
+<title>Secure Login System</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="30" r="1.5" fill="rgba(255,255,255,0.15)"/></svg>');
+    background-size: 60px 60px;
+    animation: float 30s linear infinite;
+}
+
+@keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-60px); }
+}
+
+.home-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.home-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.container {
+    background: white;
+    padding: 50px 40px;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 4rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 35px;
+    color: #333;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+form {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: #999;
+    pointer-events: none;
+}
+
+input {
+    width: 100%;
+    padding: 16px 16px 16px 50px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    background: white;
+}
+
+input::placeholder {
+    color: #999;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+.toggle {
+    text-align: center;
+    margin-top: 25px;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.toggle span {
+    color: #667eea;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle span:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+.hidden {
+    display: none;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    text-align: center;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.divider {
+    text-align: center;
+    margin: 25px 0;
+    position: relative;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: #e0e0e0;
+}
+
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+.features {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.feature-icon {
+    color: #667eea;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 40px 25px;
+    }
+    h2 {
+        font-size: 1.6rem;
+    }
+}
+</style>
 </head>
 <body>
     <button class="home-btn" onclick="goHome()">← Back to Home</button>
+    
     <div class="container">
-        <h2 id="form-title">Login</h2>
+        <div class="logo">🔐</div>
+        <h2 id="form-title">Welcome Back</h2>
+        
+        <div id="alert-container"></div>
 
         <form id="login-form">
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-            <p class="toggle">Don't have an account? <span id="show-register">Register</span></p>
+            <div class="form-group">
+                <span class="input-icon">👤</span>
+                <input type="text" id="login-username" placeholder="Username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="login-password" placeholder="Password" required autocomplete="current-password">
+            </div>
+            <button type="submit">Sign In</button>
+            <p class="toggle">Don't have an account? <span id="show-register">Create one</span></p>
         </form>
 
         <form id="register-form" class="hidden">
-            <input type="text" placeholder="Choose Username" required>
-            <input type="password" placeholder="Choose Password" required>
-            <button type="submit">Register</button>
-            <p class="toggle">Already have an account? <span id="show-login">Login</span></p>
+            <div class="form-group">
+                <span class="input-icon">👤</span>
+                <input type="text" id="register-username" placeholder="Choose Username" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="register-password" placeholder="Choose Password" required autocomplete="new-password">
+            </div>
+            <div class="form-group">
+                <span class="input-icon">✅</span>
+                <input type="password" id="register-confirm" placeholder="Confirm Password" required autocomplete="new-password">
+            </div>
+            <button type="submit">Create Account</button>
+            <p class="toggle">Already have an account? <span id="show-login">Sign in</span></p>
         </form>
+
+        <div class="features">
+            <div class="feature-item">
+                <span class="feature-icon">✓</span>
+                <span>Secure authentication system</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">✓</span>
+                <span>Protected user data</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">✓</span>
+                <span>Fast and reliable access</span>
+            </div>
+        </div>
     </div>
 
-<script src="script.js"></script>
+    <script>
+        function goHome() {
+            window.location.href = "../../index.html";
+        }
+
+        const loginForm = document.getElementById("login-form");
+        const registerForm = document.getElementById("register-form");
+        const title = document.getElementById("form-title");
+        const alertContainer = document.getElementById("alert-container");
+
+        // Simple in-memory storage for demo (replace with backend in production)
+        const users = {};
+
+        function showAlert(message, type = 'info') {
+            alertContainer.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 4000);
+        }
+
+        document.getElementById("show-register").onclick = () => {
+            loginForm.classList.add("hidden");
+            registerForm.classList.remove("hidden");
+            title.innerText = "Create Account";
+            alertContainer.innerHTML = '';
+        };
+
+        document.getElementById("show-login").onclick = () => {
+            registerForm.classList.add("hidden");
+            loginForm.classList.remove("hidden");
+            title.innerText = "Welcome Back";
+            alertContainer.innerHTML = '';
+        };
+
+        loginForm.onsubmit = (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            if (!username || !password) {
+                showAlert('⚠️ Please fill in all fields', 'error');
+                return;
+            }
+
+            // Check if user exists
+            if (users[username] && users[username] === password) {
+                showAlert(`✅ Welcome back, ${username}! Login successful.`, 'success');
+                setTimeout(() => {
+                    loginForm.reset();
+                }, 2000);
+            } else {
+                showAlert('❌ Invalid username or password', 'error');
+            }
+        };
+
+        registerForm.onsubmit = (e) => {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+
+            if (!username || !password || !confirm) {
+                showAlert('⚠️ Please fill in all fields', 'error');
+                return;
+            }
+
+            if (username.length < 3) {
+                showAlert('⚠️ Username must be at least 3 characters', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('⚠️ Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            if (password !== confirm) {
+                showAlert('⚠️ Passwords do not match', 'error');
+                return;
+            }
+
+            if (users[username]) {
+                showAlert('⚠️ Username already exists', 'error');
+                return;
+            }
+
+            // Register user
+            users[username] = password;
+            showAlert(`✅ Account created successfully! Welcome, ${username}!`, 'success');
+            
+            setTimeout(() => {
+                registerForm.reset();
+                document.getElementById("show-login").click();
+            }, 2000);
+        };
+    </script>
 </body>
 </html>

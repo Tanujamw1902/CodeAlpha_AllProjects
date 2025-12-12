@@ -3,17 +3,404 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sudoku Solver</title>
-<link rel="stylesheet" href="style.css">
+<title>AI Sudoku Solver</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.home-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: white;
+    color: #f5576c;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.home-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+    margin: 80px auto 40px;
+    background: white;
+    border-radius: 25px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+#grid {
+    margin: 30px auto;
+    border: 3px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    background: white;
+}
+
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+td {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ddd;
+    text-align: center;
+    position: relative;
+}
+
+/* 3x3 box borders */
+td:nth-child(3n) {
+    border-right: 2px solid #666;
+}
+
+tr:nth-child(3n) td {
+    border-bottom: 2px solid #666;
+}
+
+input {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    color: #333;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    background: #e3f2fd;
+}
+
+input.filled {
+    background: #fff3e0;
+    color: #f5576c;
+}
+
+input.solved {
+    background: #c8e6c9;
+    color: #2e7d32;
+    animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.5); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+button {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#solve {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+#solve:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+}
+
+#clear {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    color: #333;
+}
+
+#clear:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+#sample {
+    background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+    color: #333;
+}
+
+#sample:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.info {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.spinner {
+    display: none;
+    margin: 20px auto;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #f5576c;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner.active {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    td {
+        width: 35px;
+        height: 35px;
+    }
+    input {
+        font-size: 1.1rem;
+    }
+    .controls {
+        flex-direction: column;
+    }
+}
+</style>
 </head>
 <body>
     <button class="home-btn" onclick="goHome()">← Back to Home</button>
-    <h1>Sudoku Solver</h1>
-    <p>Fill empty cells with 0. Click Solve to solve the puzzle.</p>
+    
+    <div class="container">
+        <header>
+            <h1><span>🧩</span> Sudoku Solver</h1>
+            <p class="subtitle">AI-Powered Puzzle Solver</p>
+        </header>
 
-    <table id="grid"></table>
-    <button id="solve">Solve Sudoku</button>
+        <table id="grid"></table>
+        <div class="spinner" id="spinner"></div>
 
-<script src="script.js"></script>
+        <div class="controls">
+            <button id="sample">Load Example</button>
+            <button id="clear">Clear Grid</button>
+            <button id="solve">Solve Puzzle</button>
+        </div>
+
+        <div class="info">
+            💡 Enter numbers 1-9 or leave cells empty (0). Click "Solve Puzzle" to find the solution!
+        </div>
+    </div>
+
+    <script>
+        function goHome() {
+            window.location.href = "../../index.html";
+        }
+
+        const grid = document.getElementById('grid');
+        let cells = [];
+
+        // Create 9x9 grid
+        for (let i = 0; i < 9; i++) {
+            let tr = document.createElement('tr');
+            let row = [];
+            for (let j = 0; j < 9; j++) {
+                let td = document.createElement('td');
+                let inp = document.createElement('input');
+                inp.type = 'number';
+                inp.min = '0';
+                inp.max = '9';
+                inp.value = '';
+                inp.addEventListener('input', function() {
+                    if (this.value.length > 1) {
+                        this.value = this.value.slice(0, 1);
+                    }
+                    if (this.value < 0 || this.value > 9) {
+                        this.value = '';
+                    }
+                });
+                td.appendChild(inp);
+                tr.appendChild(td);
+                row.push(inp);
+            }
+            grid.appendChild(tr);
+            cells.push(row);
+        }
+
+        function isValid(board, row, col, num) {
+            // Check row
+            for (let i = 0; i < 9; i++) {
+                if (board[row][i] == num) return false;
+            }
+            // Check column
+            for (let i = 0; i < 9; i++) {
+                if (board[i][col] == num) return false;
+            }
+            // Check 3x3 box
+            let startRow = Math.floor(row / 3) * 3;
+            let startCol = Math.floor(col / 3) * 3;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (board[startRow + i][startCol + j] == num) return false;
+                }
+            }
+            return true;
+        }
+
+        function solveSudoku(board) {
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    if (board[i][j] == 0) {
+                        for (let num = 1; num <= 9; num++) {
+                            if (isValid(board, i, j, num)) {
+                                board[i][j] = num;
+                                if (solveSudoku(board)) return true;
+                                board[i][j] = 0;
+                            }
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        document.getElementById('solve').onclick = () => {
+            let board = cells.map(r => r.map(c => parseInt(c.value) || 0));
+            let originalBoard = cells.map(r => r.map(c => parseInt(c.value) || 0));
+            
+            document.getElementById('spinner').classList.add('active');
+            
+            setTimeout(() => {
+                if (solveSudoku(board)) {
+                    for (let i = 0; i < 9; i++) {
+                        for (let j = 0; j < 9; j++) {
+                            cells[i][j].value = board[i][j];
+                            cells[i][j].classList.remove('filled');
+                            if (originalBoard[i][j] !== 0) {
+                                cells[i][j].classList.add('filled');
+                            } else {
+                                cells[i][j].classList.add('solved');
+                            }
+                        }
+                    }
+                } else {
+                    alert('❌ No solution exists for this puzzle!');
+                }
+                document.getElementById('spinner').classList.remove('active');
+            }, 500);
+        };
+
+        document.getElementById('clear').onclick = () => {
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    cells[i][j].value = '';
+                    cells[i][j].classList.remove('filled', 'solved');
+                }
+            }
+        };
+
+        document.getElementById('sample').onclick = () => {
+            // Sample puzzle
+            const sample = [
+                [5,3,0,0,7,0,0,0,0],
+                [6,0,0,1,9,5,0,0,0],
+                [0,9,8,0,0,0,0,6,0],
+                [8,0,0,0,6,0,0,0,3],
+                [4,0,0,8,0,3,0,0,1],
+                [7,0,0,0,2,0,0,0,6],
+                [0,6,0,0,0,0,2,8,0],
+                [0,0,0,4,1,9,0,0,5],
+                [0,0,0,0,8,0,0,7,9]
+            ];
+            
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    cells[i][j].value = sample[i][j] || '';
+                    cells[i][j].classList.remove('filled', 'solved');
+                    if (sample[i][j] !== 0) {
+                        cells[i][j].classList.add('filled');
+                    }
+                }
+            }
+        };
+    </script>
 </body>
 </html>

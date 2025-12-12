@@ -3,34 +3,388 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Banking System</title>
-<link rel="stylesheet" href="style.css">
+<title>Modern Banking System</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.home-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: white;
+    color: #1e3c72;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.home-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 80px;
+}
+
+header {
+    text-align: center;
+    color: white;
+    margin-bottom: 50px;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.card-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    color: white;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+#output {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    white-space: pre-line;
+    color: #333;
+    line-height: 1.8;
+    min-height: 100px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 0.95rem;
+}
+
+#output:empty::before {
+    content: 'Account information will appear here...';
+    color: #999;
+    font-style: italic;
+}
+
+.account-status {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+    color: #333;
+}
+
+.transaction-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    .transaction-buttons {
+        grid-template-columns: 1fr;
+    }
+}
+
+.success-msg {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.error-msg {
+    color: #dc3545;
+    font-weight: 600;
+}
+</style>
 </head>
 <body>
     <button class="home-btn" onclick="goHome()">← Back to Home</button>
-    <h1>Banking System Demo</h1>
+    
+    <div class="container">
+        <header>
+            <h1>🏦 Modern Banking System</h1>
+            <p class="subtitle">Manage your account with ease</p>
+        </header>
 
-    <div class="section">
-        <h3>Create Account</h3>
-        <label>Customer Name: <input type="text" id="name"/></label>
-        <label>Initial Balance: <input type="number" id="balance" value="0"/></label>
-        <button id="create">Create Account</button>
+        <div class="dashboard">
+            <!-- Create Account Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">👤</div>
+                    <h3 class="card-title">Create Account</h3>
+                </div>
+                
+                <div class="form-group">
+                    <label>Customer Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name"/>
+                </div>
+                
+                <div class="form-group">
+                    <label>Initial Balance (₹)</label>
+                    <input type="number" id="balance" value="1000" placeholder="Enter initial balance"/>
+                </div>
+                
+                <button id="create">Create Account</button>
+            </div>
+
+            <!-- Transactions Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">💰</div>
+                    <h3 class="card-title">Transactions</h3>
+                </div>
+                
+                <div id="account-info" class="account-status" style="display:none;">
+                    No account created yet
+                </div>
+                
+                <div class="form-group">
+                    <label>Deposit Amount (₹)</label>
+                    <input type="number" id="deposit" placeholder="Enter amount to deposit"/>
+                </div>
+                
+                <div class="form-group">
+                    <label>Withdraw Amount (₹)</label>
+                    <input type="number" id="withdraw" placeholder="Enter amount to withdraw"/>
+                </div>
+                
+                <div class="transaction-buttons">
+                    <button id="do-deposit">Deposit</button>
+                    <button id="do-withdraw" class="btn-secondary">Withdraw</button>
+                </div>
+            </div>
+
+            <!-- Account Info Card -->
+            <div class="card" style="grid-column: span 1;">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <h3 class="card-title">Account Details</h3>
+                </div>
+                
+                <button id="show-info" class="btn-info">Show Full Account Info</button>
+                <div id="output"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="section">
-        <h3>Transactions</h3>
-        <label>Deposit Amount: <input type="number" id="deposit"/></label>
-        <button id="do-deposit">Deposit</button>
+    <script>
+        function goHome() {
+            window.location.href = "../../index.html";
+        }
 
-        <label>Withdraw Amount: <input type="number" id="withdraw"/></label>
-        <button id="do-withdraw">Withdraw</button>
-    </div>
+        let account = null;
 
-    <div class="section">
-        <button id="show-info">Show Account Info</button>
-        <div id="output"></div>
-    </div>
+        function updateAccountStatus() {
+            const statusDiv = document.getElementById('account-info');
+            if (account) {
+                statusDiv.style.display = 'block';
+                statusDiv.innerHTML = `💳 ${account.name} | Balance: ₹${account.balance.toFixed(2)}`;
+            }
+        }
 
-<script src="script.js"></script>
+        document.getElementById('create').onclick = () => {
+            let name = document.getElementById('name').value.trim();
+            let bal = parseFloat(document.getElementById('balance').value) || 0;
+            
+            if (name === '') {
+                document.getElementById('output').innerHTML = '<span class="error-msg">⚠️ Please enter a valid name</span>';
+                return;
+            }
+            
+            if (bal < 0) {
+                document.getElementById('output').innerHTML = '<span class="error-msg">⚠️ Initial balance cannot be negative</span>';
+                return;
+            }
+            
+            account = {
+                name: name,
+                balance: bal,
+                transactions: [`✅ Account created with balance ₹${bal.toFixed(2)}`]
+            };
+            
+            document.getElementById('output').innerHTML = `<span class="success-msg">✅ Account for ${name} created successfully!</span>`;
+            updateAccountStatus();
+        };
+
+        document.getElementById('do-deposit').onclick = () => {
+            if (!account) {
+                document.getElementById('output').innerHTML = '<span class="error-msg">⚠️ Please create an account first</span>';
+                return;
+            }
+            
+            let amt = parseFloat(document.getElementById('deposit').value) || 0;
+            
+            if (amt <= 0) {
+                document.getElementById('output').innerHTML = '<span class="error-msg">⚠️ Please enter a valid deposit amount</span>';
+                return;
+            }
+            
+            account.balance += amt;
+            account.transactions.push(`💵 Deposited: ₹${amt.toFixed(2)}`);
+            document.getElementById('output').innerHTML = `<span class="success-msg">✅ Deposited ₹${amt.toFixed(2)}\nCurrent Balance: ₹${account.balance.toFixed(2)}</span>`;
+            document.getElementById('deposit').value = '';
+            updateAccountStatus();
+        };
+
+        document.getElementById('do-withdraw').onclick = () => {
+            if (!account) {
+                document.getElementById('output').innerHTML = '<span class="error-msg">⚠️ Please create an account first</span>';
+                return;
+            }
+            
+            let amt = parseFloat(document.getElementById('withdraw').value) || 0;
+            
+            if (amt <= 0 || amt > account.balance) {
+                document.getElementById('output').innerHTML = '<span class="error-msg">⚠️ Invalid withdrawal amount or insufficient balance</span>';
+                return;
+            }
+            
+            account.balance -= amt;
+            account.transactions.push(`💸 Withdrawn: ₹${amt.toFixed(2)}`);
+            document.getElementById('output').innerHTML = `<span class="success-msg">✅ Withdrawn ₹${amt.toFixed(2)}\nCurrent Balance: ₹${account.balance.toFixed(2)}</span>`;
+            document.getElementById('withdraw').value = '';
+            updateAccountStatus();
+        };
+
+        document.getElementById('show-info').onclick = () => {
+            if (!account) {
+                document.getElementById('output').innerHTML = '<span class="error-msg">⚠️ Please create an account first</span>';
+                return;
+            }
+            
+            let text = `👤 Account Holder: ${account.name}\n💰 Current Balance: ₹${account.balance.toFixed(2)}\n\n📋 Transaction History:\n${'-'.repeat(40)}\n`;
+            account.transactions.forEach((t, i) => {
+                text += `${i + 1}. ${t}\n`;
+            });
+            
+            document.getElementById('output').innerText = text;
+        };
+    </script>
 </body>
 </html>

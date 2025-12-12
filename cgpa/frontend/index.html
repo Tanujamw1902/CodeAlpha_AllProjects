@@ -3,23 +3,344 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CGPA Calculator</title>
-<link rel="stylesheet" href="style.css">
+<title>CGPA Calculator Pro</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.home-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: white;
+    color: #667eea;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.home-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.container {
+    max-width: 900px;
+    margin: 80px auto 40px;
+    background: white;
+    border-radius: 25px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 40px;
+    text-align: center;
+    color: white;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.subtitle {
+    opacity: 0.95;
+    font-size: 1.1rem;
+}
+
+.content {
+    padding: 40px;
+}
+
+.input-section {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input[type="number"]:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+#courses {
+    margin: 30px 0;
+}
+
+.course {
+    background: white;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 15px;
+    align-items: end;
+    transition: all 0.3s ease;
+}
+
+.course:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    transform: translateX(5px);
+}
+
+.course-header {
+    font-weight: 600;
+    color: #667eea;
+    margin-bottom: 10px;
+    display: block;
+    grid-column: span 2;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+#result {
+    margin-top: 30px;
+    padding: 30px;
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    border-radius: 15px;
+    white-space: pre-line;
+    font-weight: 500;
+    color: #333;
+    line-height: 1.8;
+    min-height: 100px;
+}
+
+#result:empty::before {
+    content: 'Your GPA result will appear here...';
+    color: #666;
+    font-style: italic;
+}
+
+.gpa-highlight {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #667eea;
+    text-align: center;
+    margin: 20px 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.course-detail {
+    padding: 10px;
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 60px 10px 20px;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    .course {
+        grid-template-columns: 1fr;
+    }
+    .course-header {
+        grid-column: span 1;
+    }
+}
+</style>
 </head>
 <body>
     <button class="home-btn" onclick="goHome()">← Back to Home</button>
-    <h1>CGPA Calculator</h1>
+    
+    <div class="container">
+        <header>
+            <h1><span>📊</span> CGPA Calculator</h1>
+            <p class="subtitle">Calculate your Grade Point Average with precision</p>
+        </header>
 
-    <label>Number of courses:
-        <input type="number" id="n" min="1" value="4"/>
-    </label>
-    <button id="make">Create Course Inputs</button>
+        <div class="content">
+            <div class="input-section">
+                <div class="form-group">
+                    <label>Number of Courses</label>
+                    <input type="number" id="n" min="1" max="15" value="5"/>
+                </div>
+                <button id="make">Generate Course Inputs</button>
+            </div>
 
-    <div id="courses"></div>
+            <div id="courses"></div>
 
-    <button id="calc">Calculate CGPA</button>
-    <div id="result"></div>
+            <button id="calc">Calculate GPA</button>
+            <div id="result"></div>
+        </div>
+    </div>
 
-    <script src="script.js"></script>
+    <script>
+        function goHome() {
+            window.location.href = "../../index.html";
+        }
+
+        const makeBtn = document.getElementById('make');
+        const coursesDiv = document.getElementById('courses');
+        const calcBtn = document.getElementById('calc');
+
+        makeBtn.onclick = () => {
+            const n = parseInt(document.getElementById('n').value) || 0;
+            
+            if (n <= 0 || n > 15) {
+                alert('Please enter a valid number of courses (1-15)');
+                return;
+            }
+            
+            coursesDiv.innerHTML = '';
+            
+            for (let i = 0; i < n; i++) {
+                const d = document.createElement('div');
+                d.className = 'course';
+                d.innerHTML = `
+                    <span class="course-header">📚 Course ${i + 1}</span>
+                    <div>
+                        <label>Grade</label>
+                        <select class="grade">
+                            <option value="10">A+ / S (10.0)</option>
+                            <option value="9">A (9.0)</option>
+                            <option value="8" selected>B+ (8.0)</option>
+                            <option value="7">B (7.0)</option>
+                            <option value="6">C (6.0)</option>
+                            <option value="5">D (5.0)</option>
+                            <option value="0">F / E (0.0)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Credit Hours</label>
+                        <input type="number" class="credit" min="1" max="10" value="3"/>
+                    </div>
+                `;
+                coursesDiv.appendChild(d);
+            }
+        };
+
+        calcBtn.onclick = () => {
+            const grades = [...document.querySelectorAll('.grade')].map(s => parseFloat(s.value));
+            const credits = [...document.querySelectorAll('.credit')].map(i => parseFloat(i.value));
+            
+            if (grades.length === 0) {
+                alert('Please generate course inputs first!');
+                return;
+            }
+            
+            let totalC = 0;
+            let totalGP = 0;
+            
+            for (let i = 0; i < grades.length; i++) {
+                if (credits[i] <= 0) {
+                    alert(`Invalid credit hours for Course ${i + 1}`);
+                    return;
+                }
+                totalC += credits[i];
+                totalGP += grades[i] * credits[i];
+            }
+            
+            const gpa = totalC > 0 ? (totalGP / totalC) : 0;
+            
+            let resultHTML = `<div class="gpa-highlight">${gpa.toFixed(2)} GPA</div>`;
+            resultHTML += `<strong>📌 Summary</strong>\n`;
+            resultHTML += `Total Credits: ${totalC.toFixed(1)}\n`;
+            resultHTML += `Total Grade Points: ${totalGP.toFixed(2)}\n\n`;
+            resultHTML += `<strong>📋 Course Breakdown:</strong>\n`;
+            
+            for (let i = 0; i < grades.length; i++) {
+                const gradePoints = (grades[i] * credits[i]).toFixed(2);
+                resultHTML += `<div class="course-detail">Course ${i + 1}: Grade ${grades[i].toFixed(1)} × ${credits[i]} credits = ${gradePoints} points</div>`;
+            }
+            
+            // Performance message
+            resultHTML += '\n<strong>📈 Performance:</strong> ';
+            if (gpa >= 9.0) resultHTML += 'Outstanding! 🌟';
+            else if (gpa >= 8.0) resultHTML += 'Excellent! 🎯';
+            else if (gpa >= 7.0) resultHTML += 'Very Good! 👍';
+            else if (gpa >= 6.0) resultHTML += 'Good! ✅';
+            else if (gpa >= 5.0) resultHTML += 'Satisfactory 📝';
+            else resultHTML += 'Needs Improvement 💪';
+            
+            document.getElementById('result').innerHTML = resultHTML;
+        };
+
+        // Auto-generate on load
+        makeBtn.click();
+    </script>
 </body>
 </html>
