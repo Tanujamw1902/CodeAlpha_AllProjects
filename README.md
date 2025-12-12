@@ -1,5 +1,5 @@
-# 🚀 CodeAlpha C++ Internship – Full Stack CPP + Frontend Projects  
-This repository contains **4 Complete Projects** developed under the **CodeAlpha C++ Internship**.  
+# 🚀 ull Stack CPP + Frontend Projects  
+This repository contains **4 Complete Projects**. 
 Each project includes:
 
 ✔ C++ Backend Logic  
